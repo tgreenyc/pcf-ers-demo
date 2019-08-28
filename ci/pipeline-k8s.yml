@@ -55,21 +55,19 @@ jobs:
   - put: release-candidate
     params:
       name: git-repo/ci/name
-      tag: master/version
+      tag: version/version
       body: git-repo/ci/release-body
       globs:
         - artifact-dir/pcf-ers-demo*.jar
   - put: git-repo
     params:
       repository: git-repo
-      tag: master/version
+      tag: version/version
   - put: version
-    params: {file: master/version}
+    params: {file: version/version}
 
 - name: build-image
   plan:
-  - get: version
-    params: { pre: rc }
   - get: git-repo
     passed: [build-artifact]
     trigger: true
@@ -78,7 +76,6 @@ jobs:
     trigger: true
   - put: git-resource-image
     params:
-      build: git-repo/ci
+      build: git-repo
       build_args:
-        VERSION: version 
         ARTIFACT: ((GIT_RELEASE_REPO))
