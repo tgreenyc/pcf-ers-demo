@@ -1,0 +1,84 @@
+resources:
+- name: git-repo
+  type: git
+  source:
+    uri: ((GIT_REPO))
+    branch: master
+    private_key: ((GIT_PRIVATE_KEY))
+
+- name: version
+  type: semver
+  source:
+    driver: git
+    uri: ((GIT_REPO))
+    branch: master
+    file: version
+    private_key: ((GIT_PRIVATE_KEY))
+    initial_version: 1.0.0
+
+- name: release-candidate
+  type: github-release
+  source:
+    owner: ((GIT_USER))
+    repository: ((GIT_RELEASE_REPO))
+    access_token: ((GIT_ACCESS_TOKEN))
+
+- name: git-resource-image
+  type: docker-image
+  source:
+    repository: ((REGISTRY_USER))/pcf-ers-demo
+    username: ((REGISTRY_USER))
+    password: ((REGISTRY_PASS))
+
+jobs:
+- name: unit-tests
+  serial: true
+  plan:
+  - get: git-repo
+    trigger: true
+  - task: unit
+    file: git-repo/ci/tasks/unit.yml
+
+- name: build-artifact
+  serial: true
+  plan:
+  - get: git-repo
+    passed: [unit-tests]
+    trigger: true
+  - get: version
+    params: { pre: rc }
+  - task: build-artifact
+    file: git-repo/ci/tasks/build-artifact.yml
+    timeout: 5m
+    params:
+      base_name: pcf-ers-demo
+  - put: release-candidate
+    params:
+      name: git-repo/ci/name
+      tag: master/version
+      body: git-repo/ci/release-body
+      globs:
+        - artifact-dir/pcf-ers-demo*.jar
+  - put: git-repo
+    params:
+      repository: git-repo
+      tag: master/version
+  - put: version
+    params: {file: master/version}
+
+- name: build-image
+  plan:
+  - get: version
+    params: { pre: rc }
+  - get: git-repo
+    passed: [build-artifact]
+    trigger: true
+  - get: release-candidate
+    passed: [build-artifact]
+    trigger: true
+  - put: git-resource-image
+    params:
+      build: git-repo/ci
+      build_args:
+        VERSION: version 
+        ARTIFACT: ((GIT_RELEASE_REPO))

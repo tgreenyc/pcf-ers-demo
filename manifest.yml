@@ -1,11 +1,13 @@
 ---
 applications:
-- name: attendees
-  memory: 768M
+- name: pcf-demo
+  disk_quota: 2G
+  memory: 1G
   instances: 1
-  random-route: true
-  path: target/pcf-ers-demo1-0.0.1-SNAPSHOT.jar
-  buildpack: java_buildpack
+  #path: target/pcf-ers-demo1-1.0.jar
   services: []
+  #random-route: true
+  #routes:
+  #  - route: istio-demo.mesh.apps.pcfbeta.io
   env:
     SPRING_PROFILES_ACTIVE: cloud
