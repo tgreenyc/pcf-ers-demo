@@ -74,8 +74,10 @@ jobs:
   - get: release-candidate
     passed: [build-artifact]
     trigger: true
+  - task: merge-directories
+    file: git-repo/ci/tasks/merge-directories.yml
   - put: git-resource-image
     params:
-      build: git-repo
+      build: image-build-dir
       build_args:
         ARTIFACT: ((GIT_RELEASE_REPO))
