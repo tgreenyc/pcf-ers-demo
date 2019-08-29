@@ -1,3 +1,10 @@
+resource_types:
+- name: kubernetes
+  type: docker-image
+  source: 
+    repository: zlabjp/kubernetes-resource
+    tag: "1.15"
+
 resources:
 - name: git-repo
   type: git
@@ -29,6 +36,14 @@ resources:
     repository: ((REGISTRY_USER))/pcf-ers-demo
     username: ((REGISTRY_USER))
     password: ((REGISTRY_PASS))
+
+- name: kubernetes-cluster
+  type: kubernetes
+  source:
+    server: https://34.68.253.32:443
+    namespace: default
+    token: ((K8S_BEARER_TOKEN))
+    certificate_authority: ((K8S_CA))
 
 jobs:
 - name: unit-tests
