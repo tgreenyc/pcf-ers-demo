@@ -11,7 +11,7 @@ resources:
   source:
     driver: git
     uri: ((GIT_REPO))
-    branch: master
+    branch: version
     file: version
     private_key: ((GIT_PRIVATE_KEY))
     initial_version: 1.0.0
