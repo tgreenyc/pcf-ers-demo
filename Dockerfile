@@ -1,4 +1,6 @@
+
 FROM openjdk:8
-COPY /tmp/build/put/release-candidate/*.jar /usr/src/myapp/
+WORKDIR /tmp/build/put
+COPY release-candidate/*.jar /usr/src/myapp/
 ENTRYPOINT ["sh", "bin/start.sh"]
 EXPOSE 8080
