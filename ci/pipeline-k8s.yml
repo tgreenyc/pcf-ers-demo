@@ -102,6 +102,8 @@ jobs:
 
 - name: kubernetes-deploy
   plan:
+  - get: version
+    passed: [build-image]
   - put: kubernetes-cluster
     params:
       kubectl: run 
