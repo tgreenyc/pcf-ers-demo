@@ -96,3 +96,9 @@ jobs:
       build: image-build-dir
       build_args:
         ARTIFACT: ((GIT_RELEASE_REPO))
+
+- name: kubernetes-deploy
+  plan:
+  - put: kubernetes-cluster
+    params:
+      kubectl: run 
