@@ -164,12 +164,14 @@ jobs:
     plan:
     - get: git-repo
       passed: [ship-it]
+      trigger: true
     - task: kong-service
       file: git-repo/ci/tasks/kong-service.yml
       params:
         ROUTE: pcf-ers-demo
         DOMAIN: cfapps.io
         GW_DOMAIN: apps.pcfnyc.com
+        ADMIN_API: ((KONG_API))
 
   - name: major
     serial_groups: [ version ]

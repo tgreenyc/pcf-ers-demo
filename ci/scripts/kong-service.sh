@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
+set -x
 
-export API_ENDPOINT="${ROUTE}.${DOMAIN}"
+export API_ENDPOINT="http://${ROUTE}.${DOMAIN}"
 
 curl -i -X POST \
     --url ${ADMIN_API}/services/ \
