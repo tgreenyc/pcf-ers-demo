@@ -7,10 +7,14 @@ image_resource:
     repository: ubuntu
     tag: "latest"
 
+inputs:
+- name: git-repo
+
 run:
   path: git-repo/ci/scripts/kong-service.sh
 
 params:
   ROUTE:
   DOMAIN:
+  GW_DOMAIN:
   ADMIN_API:

@@ -164,11 +164,11 @@ jobs:
     plan:
     - get: git-repo
       passed: [ship-it]
-    - task: unit
-      file: git-repo/ci/tasks/unit.yml
+    - task: kong-service
+      file: git-repo/ci/tasks/kong-service.yml
       params:
-        ROUTE: pcf-ers-demo-tg
-        DOMAIN: run.pivotal.io
+        ROUTE: pcf-ers-demo
+        DOMAIN: cfapps.io
         GW_DOMAIN: apps.pcfnyc.com
 
   - name: major
