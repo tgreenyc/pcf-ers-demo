@@ -43,9 +43,16 @@ resources:
     server: https://34.68.253.32:443
     namespace: default
     token: ((K8S_BEARER_TOKEN))
-    certificate_authority: ((K8S_CA))
+    insecure_skip_tls_verify: true
 
 jobs:
+- name: kubernetes-delete
+  plan:
+  - put: kubernetes-cluster
+    params:
+      kubectl: delete deploy pcf-ers-demo
+      context: gke_fe-tgreen_us-central1-a_kong-cluster
+
 - name: unit-tests
   serial: true
   plan:
@@ -102,8 +109,9 @@ jobs:
 
 - name: kubernetes-deploy
   plan:
-  - get: version
-    passed: [build-image]
+  - get: git-repo
+    passed: [build-artifact]
   - put: kubernetes-cluster
     params:
-      kubectl: run 
+      kubectl: -f apply k8s-deploy.yml 
+      context: gke_fe-tgreen_us-central1-a_kong-cluster

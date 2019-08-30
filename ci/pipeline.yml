@@ -61,8 +61,6 @@ resources:
     access_token: {{GIT_ACCESS_TOKEN}}
 
 
-
-
 jobs:
   - name: unit-tests
     plan:
@@ -161,6 +159,17 @@ jobs:
         manifest: git-repo/manifest-prod.yml
         current_app_name: pcf-ers-demo
         path: final-dir/pcf-ers-demo*.jar
+
+  - name: configure-kong
+    plan:
+    - get: git-repo
+      passed: [ship-it]
+    - task: unit
+      file: git-repo/ci/tasks/unit.yml
+      params:
+        ROUTE: pcf-ers-demo-tg
+        DOMAIN: run.pivotal.io
+        GW_DOMAIN: apps.pcfnyc.com
 
   - name: major
     serial_groups: [ version ]
