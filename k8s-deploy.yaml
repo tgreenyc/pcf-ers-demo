@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: pcf-ers-demo
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pcf-ers-demo
+spec:
+  selector:
+    matchLabels:
+      app: pcf-ers-demo
+  template:
+    metadata:
+      labels:
+        app: pcf-ers-demo
+    spec:
+      containers:
+      - name: pcf-ers-demo
+        image: greent/pcf-ers-demo
+        resources:
+        ports:
+        - containerPort: 8080
